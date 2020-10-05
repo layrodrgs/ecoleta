@@ -88,15 +88,16 @@ server.get("/search", (req, res) => {
 
     const search = req.query.search
 
-    if(search == "") {
+    /*if(search == "") {
       //pesquisa vazia
-      return res.render("search-results.html", {total: 0})
-
-    }
+    
+        return res.render("search-results.html", {total: 0})
+     
+    }*/
 
     //pegar os dados do banco de dados
 
-      db.all(`SELECT * FROM places WHERE city LIKE= '%${search}%'`, function(err, rows){
+      db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function(err, rows){
         if(err){
             return console.log(err)
         }
