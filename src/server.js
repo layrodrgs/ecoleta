@@ -1,4 +1,6 @@
+const passport = require('passport')
 const express = require("express")
+const session = require("express-session")
 const server = express()
 
 //pegar o banco de dados
@@ -10,6 +12,19 @@ server.use(express.static("public"))
 //habilitar o uso do req.body na aplicação
 server.use(express.urlencoded({extended: true}))
 
+require('./auth')(passport);
+server.set('trust proxy', 1) // trust first proxy
+server.use(session({
+  secret: 'mySecretPhrase',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+     // secure: true // requires HTTPS connection
+  }
+}))
+
+server.use(passport.initialize());
+server.use(passport.session());
 
 //utilizando template engine
 const nunjucks = require("nunjucks")
@@ -17,6 +32,15 @@ nunjucks.configure("src/views",{
     express: server,
     noCache: true
 })
+
+function authenticationMiddleware () {  
+  return function (req, res, next) {
+    if (req.isAuthenticated()) {
+      return next()
+    }
+    res.redirect('/login')
+  }
+}
 
 //configurar caminhos da minha aplicação
 //página inicial
@@ -26,31 +50,21 @@ server.get("/", (req, res) => {
   return  res.render("index.html", { title: "um titulo"})
 })
 
-
-
-server.get("/create-point", (req, res) => {
-
+server.get("/create-point", authenticationMiddleware (), (req, res) => {
       //req.query: query strings da url
       //console.log(req.query)
-
-
    return res.render("create-point.html")
 })
 
-server.get("/restrict", (req, res) => {
-
+server.get("/restrict", authenticationMiddleware (), (req, res) => {
   //req.query: query strings da url
   //console.log(req.query)
-
-
 return res.render("restrict.html")
 })
 
-server.post("/savepoint", (req, res) =>{
-
+server.post("/savepoint", authenticationMiddleware (), (req, res) =>{
   //req.body: corpo do formulário
   //console.log(req.body)
-
   //inserir dados no banco de dados
     const query = `
         INSERT INTO places (
@@ -71,7 +85,6 @@ server.post("/savepoint", (req, res) =>{
        req.body.state,
        req.body.city,
        req.body.itens
-
     ]
 
     function afterInsertData(err){
@@ -90,20 +103,15 @@ server.post("/savepoint", (req, res) =>{
 
 })
 
-
-
-
 server.get("/search", (req, res) => {
 
     const search = req.query.search
-
     /*if(search == "") {
       //pesquisa vazia
     
         return res.render("search-results.html", {total: 0})
      
     }*/
-
     //pegar os dados do banco de dados
 
       db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function(err, rows){
@@ -118,6 +126,17 @@ server.get("/search", (req, res) => {
     })
    
  })
+
+server.get('/login', function(req, res){
+  if(req.query.fail)
+    res.render('login.html', { message: 'Usuário e/ou senha incorretos!' });
+  else
+    res.render('login.html', { message: null });
+})
+
+server.post('/login',
+  passport.authenticate('local', { successRedirect: '/restrict', failureRedirect: '/login?fail=true' })
+);
 
 //ligar o servidor
 server.listen(3000) 

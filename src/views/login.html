@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% set pageId = "page-login" %}
+
+{% block title %}
+    <title>Criar um ponto de coleta</title>
+{% endblock title %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/styles/login.css">
+{% endblock styles %}
+
+{% block content %}
+    {% include "partials/page-header.html" %}
+
+    <form action="/login" method="POST">
+        <h1>Login</h1>
+        <fieldset>
+                <div class="field-group">
+                <div class="field">
+                    <label for="username">Usuário</label>
+                    <input type="text" name="username" required="required">
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <input type="password" name="password" required="required">
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit">Logar</button>
+        {% if(message) %}
+        <p style="padding: 20px 0;"><label style="color:Red">{{message}}</label></p>
+        {% endif %}
+    </form>
+    
+{% endblock content %}

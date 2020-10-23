@@ -8,6 +8,14 @@ module.exports = db
 //utilizar objetos de banco de dados, para nossas operações
   db.serialize(() => {
 
+
+    //db.run(`
+    //    CREATE TABLE IF NOT EXISTS users (
+    //        id INTEGER PRIMARY KEY AUTOINCREMENT,
+     //       usermane TEXT,
+     //       password TEXT
+      //  );
+      //  `)
     //com comandos sql eu vou:
     
     // 1 criar uma tabela 

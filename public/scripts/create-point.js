@@ -61,7 +61,7 @@ document
         item.addEventListener("click", handleSelectedItem)
     }
 
-    const collectedItems =   document.querySelector("input[name=items]")
+    const collectedItems =   document.querySelector("input[name=itens]")
 
     let selectedItems = []
 
