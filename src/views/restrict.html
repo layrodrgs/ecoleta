@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+    {% set pageId = "page-restrict" %}
+
+    {% block styles %}
+     <link rel="stylesheet" href="/styles/restrict.css">
+    {% endblock styles %}
+
+    {% block title %}
+    <title>Área Restrita</title>
+    {% endblock title %}
+    
+    {% block content %}
+    <div class="content">
+
+        {% include "partials/page-header.html" %}
+
+        <main>
+            <h2 class="red">Área Restrita</h2> 
+            <a href="/search?search=">
+                <span></span>
+                <strong>Listar pontos de coleta</strong></a> 
+            <a href="/create-point">
+                <span></span>
+                <strong>Cadastrar ponto de coleta</strong></a>  
+        </main> 
+    </div>
+    {% endblock content %}
+
+    
+    {% block scripts %}
+    {% endblock scripts %}
+   
+
+    

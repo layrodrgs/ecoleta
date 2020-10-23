@@ -37,6 +37,15 @@ server.get("/create-point", (req, res) => {
    return res.render("create-point.html")
 })
 
+server.get("/restrict", (req, res) => {
+
+  //req.query: query strings da url
+  //console.log(req.query)
+
+
+return res.render("restrict.html")
+})
+
 server.post("/savepoint", (req, res) =>{
 
   //req.body: corpo do formulário
